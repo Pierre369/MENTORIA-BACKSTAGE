@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mentoria Backstage – TikTok Shop Brasil</title>
+  <style>
+    :root{
+      --bg:#000000;
+      --fg:#ffffff;
+      --pink:#FF0050;
+      --cyan:#00F2EA;
+      --muted:#bbbbbb;
+      --card:#0e0e0e;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--fg);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      overflow:hidden;
+    }
+    .deck{
+      position:relative;
+      width:100vw; height:100vh;
+    }
+    .slide{
+      position:absolute; inset:0;
+      display:flex; flex-direction:column; gap:24px;
+      padding:48px clamp(16px,4vw,56px);
+      background:linear-gradient(180deg, rgba(255,0,80,.08), transparent 40%),
+                 linear-gradient(0deg, rgba(0,242,234,.08), transparent 40%),
+                 var(--bg);
+      opacity:0; pointer-events:none; transform:translateX(30px);
+      transition:opacity .35s ease, transform .35s ease;
+    }
+    .slide.active{opacity:1; pointer-events:auto; transform:translateX(0)}
+    .badge{
+      display:inline-block; padding:6px 12px; border-radius:999px;
+      background:rgba(255,0,80,.12); color:var(--pink); font-weight:700; letter-spacing:.3px;
+      border:1px solid rgba(255,0,80,.4)
+    }
+    h1{
+      font-size: clamp(28px, 3.3vw, 48px);
+      line-height:1.05; margin:0; font-weight:900;
+    }
+    .subtitle{color:var(--muted); margin-top:-6px}
+    .grid{
+      display:grid; gap:12px;
+      grid-template-columns: 1fr auto;
+      background:var(--card);
+      border:1px solid #1e1e1e; border-radius:16px; padding:12px;
+      max-width:1100px;
+    }
+    .row{
+      display:contents;
+    }
+    .item{
+      padding:14px 16px; border-bottom:1px dashed #262626;
+    }
+    .val{
+      padding:14px 16px; text-align:right; white-space:nowrap; color:#eaeaea; font-weight:700;
+      border-bottom:1px dashed #262626;
+    }
+    .row:last-child .item, .row:last-child .val{ border-bottom:none }
+    .note{color:var(--muted); font-size:14px}
+    .total{
+      margin-top:8px; font-weight:900; font-size:clamp(18px,2vw,24px);
+      color:#fff; display:flex; gap:10px; align-items:center;
+    }
+    .total .chip{
+      background:rgba(0,242,234,.14); color:var(--cyan); padding:6px 10px; border-radius:10px;
+      border:1px solid rgba(0,242,234,.35); font-weight:800; letter-spacing:.2px;
+    }
+    .ctaZone{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+    .btn{
+      background:var(--pink); color:#fff; border:none; border-radius:12px;
+      font-weight:900; letter-spacing:.3px; padding:14px 18px; cursor:pointer;
+    }
+    .btn.secondary{ background:#111; border:1px solid #2a2a2a; color:#eee }
+    .nav{
+      position:fixed; right:16px; bottom:16px; display:flex; gap:10px;
+    }
+    .nav .btn{padding:12px 14px}
+    .priceBlock{
+      display:flex; flex-direction:column; gap:14px; max-width:900px;
+      background:var(--card); border:1px solid #1e1e1e; border-radius:16px; padding:20px;
+    }
+    .strike{color:#ffedf4; opacity:.6; text-decoration:line-through}
+    .heroPrice{font-size: clamp(36px, 6vw, 84px); font-weight:1000; color:#fff}
+    .bullets{display:grid; gap:10px; margin-top:6px}
+    .bullet{display:flex; align-items:flex-start; gap:10px}
+    .dot{
+      width:10px; height:10px; border-radius:50%; background:linear-gradient(180deg,var(--pink),var(--cyan))
+    }
+    a.link{color:var(--cyan); text-decoration:none; border-bottom:1px dashed rgba(0,242,234,.5)}
+    footer{margin-top:auto; color:#9a9a9a; font-size:12px}
+    .brand{
+      display:flex; align-items:center; gap:10px; margin-bottom:6px; opacity:.95
+    }
+    .brand .logo{
+      width:34px; height:34px; border-radius:10px;
+      background:conic-gradient(from 200deg, var(--pink), var(--cyan));
+      box-shadow: 0 0 30px rgba(255,0,80,.2), 0 0 18px rgba(0,242,234,.16);
+    }
+    .brand strong{letter-spacing:.3px}
+    /* PRINT: cada slide vira uma página A4 */
+    @media print{
+      body{overflow:visible}
+      .deck{height:auto}
+      .slide{position:relative; transform:none !important; opacity:1 !important; page-break-after:always; min-height:auto; height:auto}
+      .nav, .btn-print{display:none !important}
+      @page { size: A4; margin: 12mm }
+      .grid{max-width:100%}
+    }
+  </style>
+</head>
+<body>
+  <div class="deck" id="deck">
+    <!-- SLIDE 1 -->
+    <section class="slide active" data-slide="0">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <strong>Mentoria Backstage</strong> <span style="color:var(--muted)">— TikTok Shop Brasil</span>
+      </div>
+      <span class="badge">Tudo que você vai receber</span>
+      <h1>Do zero ao faturamento no <span style="color:var(--cyan)">TikTok Shop</span></h1>
+      <div class="subtitle">Mesmo que você nunca tenha editado um vídeo: edição + IA + aulas passo a passo.</div>
+
+      <div class="grid" role="table" aria-label="Itens e valores">
+        <div class="row">
+          <div class="item"><strong>Conta com TikTok Shop habilitado</strong></div>
+          <div class="val">R$ 250</div>
+        </div>
+        <div class="row">
+          <div class="item"><strong>Esteira de produtos vencedores já validados</strong></div>
+          <div class="val">R$ 197</div>
+        </div>
+        <div class="row">
+          <div class="item"><strong>Acompanhamento semanal das métricas + ajustes estratégicos</strong></div>
+          <div class="val">R$ 5.000</div>
+        </div>
+        <div class="row">
+          <div class="item"><strong>Edição de vídeos + uso de IA + aulas gravadas passo a passo</strong></div>
+          <div class="val">R$ 1.197</div>
+        </div>
+        <div class="row">
+          <div class="item"><strong>Aulas ao vivo com suporte em tempo real</strong></div>
+          <div class="val">R$ 997</div>
+        </div>
+        <div class="row">
+          <div class="item"><strong>Ebook exclusivo de estratégias TikTok Shop</strong></div>
+          <div class="val">R$ 97</div>
+        </div>
+        <div class="row">
+          <div class="item"><strong>Premiação de faturamento (top alunos)</strong> <span class="note">— sem custo para o aluno</span></div>
+          <div class="val">Sem custo</div>
+        </div>
+        <div class="row">
+          <div class="item"><strong>Grupo individual no WhatsApp (suporte direto)</strong></div>
+          <div class="val">R$ 497</div>
+        </div>
+        <div class="row">
+          <div class="item"><strong>Networking com mentorados e parceiros estratégicos</strong></div>
+          <div class="val">R$ 997</div>
+        </div>
+        <div class="row">
+          <div class="item"><strong>Convidados especiais durante 6 meses (SCAL)</strong> <span class="note">— incluso</span></div>
+          <div class="val">Incluso</div>
+        </div>
+        <div class="row">
+          <div class="item"><strong>Bônus: Checklist diário de tarefas</strong></div>
+          <div class="val">R$ 97</div>
+        </div>
+        <div class="row">
+          <div class="item"><strong>Bônus: Templates de criativos virais</strong></div>
+          <div class="val">R$ 297</div>
+        </div>
+      </div>
+
+      <div class="total">
+        <span>Total somado:</span>
+        <span class="chip">R$ 9.626,00</span>
+      </div>
+
+      <div class="ctaZone">
+        <button class="btn btn-print" onclick="window.print()">Baixar PDF</button>
+        <a class="btn secondary" href="#checkout">Aplicar agora</a>
+        <span class="note">Use as setas do teclado para avançar.</span>
+      </div>
+
+      <footer>© Mentoria Backstage — TikTok Shop Brasil</footer>
+    </section>
+
+    <!-- SLIDE 2 -->
+    <section class="slide" data-slide="1">
+      <span class="badge">Oferta especial</span>
+      <h1>Você NÃO vai pagar R$ 9.626,00</h1>
+
+      <div class="priceBlock">
+        <div class="strike">Valor somado: R$ 9.626,00</div>
+        <div class="heroPrice">R$ 2.500,00</div>
+        <div class="note">Preço promocional por tempo limitado.</div>
+
+        <div class="bullets">
+          <div class="bullet"><div class="dot"></div><div>Acompanhamento em grupo por 6 meses</div></div>
+          <div class="bullet"><div class="dot"></div><div>Aulas ao vivo + suporte em tempo real</div></div>
+          <div class="bullet"><div class="dot"></div><div>Convidados especiais SCAL (táticas de escala)</div></div>
+          <div class="bullet"><div class="dot"></div><div>Produtos validados + Checklists + Templates virais</div></div>
+          <div class="bullet"><div class="dot"></div><div>Edição + IA: do zero ao vídeo que vende</div></div>
+        </div>
+
+        <div class="ctaZone">
+          <a class="btn" href="#checkout">Garantir minha vaga</a>
+          <button class="btn secondary btn-print" onclick="window.print()">Baixar PDF</button>
+        </div>
+      </div>
+
+      <footer>Vagas limitadas — quando fechar, só na próxima turma.</footer>
+    </section>
+
+    <!-- Navegação -->
+    <div class="nav">
+      <button class="btn secondary" id="prevBtn" aria-label="Slide anterior">◀</button>
+      <button class="btn" id="nextBtn" aria-label="Próximo slide">▶</button>
+    </div>
+  </div>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    let idx = 0;
+    function show(i){
+      idx = (i+slides.length)%slides.length;
+      slides.forEach((s,k)=> s.classList.toggle('active', k===idx));
+    }
+    document.getElementById('nextBtn').onclick = ()=>show(idx+1);
+    document.getElementById('prevBtn').onclick = ()=>show(idx-1);
+    window.addEventListener('keydown', (e)=>{
+      if(e.key==='ArrowRight') show(idx+1);
+      if(e.key==='ArrowLeft') show(idx-1);
+    });
+  </script>
+</body>
+</html>
